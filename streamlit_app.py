@@ -78,7 +78,7 @@ min_value = gdp_df['时间'].min()
 max_value = gdp_df['时间'].max()
 
 from_year, to_year = st.slider(
-    'Which years are you interested in?',
+    '时间区间',
     min_value=min_value,
     max_value=max_value,
     value=[2005, max_value])
@@ -89,7 +89,7 @@ if not len(countries):
     st.warning("Select at least one country")
 
 selected_countries = st.multiselect(
-    'Which countries would you like to view?',
+    '城市',
     countries,
     ['北京', '上海', '深圳', '杭州', '成都', '烟台'])
 
@@ -132,8 +132,8 @@ for i, country in enumerate(selected_countries):
     col = cols[i % len(cols)]
 
     with col:
-        first_gdp = first_year[first_year['城市'] == country]['房价'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['城市'] == country]['房价'].iat[0] / 1000000000
+        first_gdp = first_year[first_year['城市'] == country]['房价'].iat[0] 
+        last_gdp = last_year[last_year['城市'] == country]['房价'].iat[0] 
 
         if math.isnan(first_gdp):
             growth = 'n/a'
