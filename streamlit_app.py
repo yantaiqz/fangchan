@@ -147,7 +147,7 @@ for i, country in enumerate(selected_countries):
             delta_color = 'normal'
             
         st.metric(
-            label=f'{country} GDP',
+            label=f'{country}',
             value=f'{last_gdp:,.0f}',
             delta=growth,
             delta_color=delta_color
