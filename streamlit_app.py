@@ -52,7 +52,7 @@ def get_gdp_data():
     st.dataframe(raw_gdp_df.head())
 
     gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
+        ['城市'],
         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
         'Year',
         '房价',
@@ -119,7 +119,7 @@ st.line_chart(
     filtered_gdp_df,
     x='Year',
     y='房价',
-    color='Country Code',
+    color='城市',
 )
 
 ''
