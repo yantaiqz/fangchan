@@ -46,10 +46,6 @@ def get_gdp_data():
     #
     # So let's pivot all those year-columns into two: Year and GDP
 
-    # 调试代码：查看实际的列名
-    st.write(raw_gdp_df.columns.tolist()) 
-    # 调试代码：查看前几行数据，确保数据加载正确
-    st.dataframe(raw_gdp_df.head())
 
     gdp_df = raw_gdp_df.melt(
         ['城市'],
