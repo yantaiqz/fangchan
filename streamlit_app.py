@@ -122,7 +122,7 @@ st.line_chart(
 first_year = gdp_df[gdp_df['时间'] == from_year]
 last_year = gdp_df[gdp_df['时间'] == to_year]
 
-st.header(f'{to_year}年房价', divider='gray')
+st.header(f'{to_year}年房价同比增长', divider='gray')
 
 ''
 
@@ -139,12 +139,15 @@ for i, country in enumerate(selected_countries):
             growth = 'n/a'
             delta_color = 'off'
         else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
+            # growth = f'{last_gdp / first_gdp:,.2f}x'
+            # delta_color = 'normal'
+
+            pct_change = (last_gdp - first_gdp) / first_gdp
+            growth = f'{pct_change:+.2%}'
 
         st.metric(
             label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
+            value=f'{last_gdp:,.0f}',
             delta=growth,
             delta_color=delta_color
         )
