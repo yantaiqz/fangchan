@@ -117,9 +117,9 @@ st.header('房价走势', divider='gray')
 
 st.line_chart(
     filtered_gdp_df,
-    x='时间',
-    y='房价',
-    color='城市',
+    x='Year',
+    y='GDP',
+    color='Country Code',
 )
 
 ''
