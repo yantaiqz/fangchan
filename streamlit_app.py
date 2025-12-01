@@ -48,7 +48,7 @@ def get_gdp_data():
 
 
     gdp_df = raw_gdp_df.melt(
-        ['城市'],
+        ['Country Code'],
         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
         '时间',
         '房价',
@@ -56,7 +56,7 @@ def get_gdp_data():
     
     # Convert years from string to integers
     gdp_df['时间'] = pd.to_numeric(gdp_df['时间'])
-
+    gdp_df = gdp_df.rename(columns={'Country Code': '城市'})
     return gdp_df
 
 gdp_df = get_gdp_data()
