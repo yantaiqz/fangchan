@@ -22,11 +22,11 @@ def get_gdp_data():
     """
 
     # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
+    DATA_FILENAME = Path(__file__).parent/'data/fangchan_data.csv'
     raw_gdp_df = pd.read_csv(DATA_FILENAME)
 
-    MIN_YEAR = 1995
-    MAX_YEAR = 2022
+    MIN_YEAR = 1998
+    MAX_YEAR = 2025
 
     # The data above has columns like:
     # - Country Name
@@ -92,7 +92,7 @@ if not len(countries):
 selected_countries = st.multiselect(
     'Which countries would you like to view?',
     countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
+    ['北京', '上海', '深圳', '杭州', '成都', '烟台'])
 
 ''
 ''
