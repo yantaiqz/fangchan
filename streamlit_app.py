@@ -23,7 +23,7 @@ def get_gdp_data():
 
     # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
     DATA_FILENAME = Path(__file__).parent/'data/fangchan_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
+    raw_gdp_df = pd.read_csv(DATA_FILENAME, delimiter=';')
 
     MIN_YEAR = 1998
     MAX_YEAR = 2025
@@ -57,7 +57,7 @@ def get_gdp_data():
         'Year',
         'GDP',
     )
-
+    
     # Convert years from string to integers
     gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
 
