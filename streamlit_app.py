@@ -111,15 +111,15 @@ filtered_gdp_df = gdp_df[
     & (from_year <= gdp_df['Year'])
 ]
 
-st.header('GDP over time', divider='gray')
+st.header('房价走势', divider='gray')
 
 ''
 
 st.line_chart(
     filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
+    x='时间',
+    y='房价',
+    color='城市',
 )
 
 ''
@@ -129,7 +129,7 @@ st.line_chart(
 first_year = gdp_df[gdp_df['Year'] == from_year]
 last_year = gdp_df[gdp_df['Year'] == to_year]
 
-st.header(f'GDP in {to_year}', divider='gray')
+st.header(f'{to_year}年房价', divider='gray')
 
 ''
 
