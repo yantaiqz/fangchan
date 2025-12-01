@@ -25,8 +25,13 @@ def get_gdp_data():
     DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
     raw_gdp_df = pd.read_csv(DATA_FILENAME)
 
+<<<<<<< HEAD
     MIN_YEAR = 1995
     MAX_YEAR = 2025
+=======
+    MIN_YEAR = 1960
+    MAX_YEAR = 2022
+>>>>>>> accad9f36b337ef32d06932e1a87e25fc6b8c422
 
     # The data above has columns like:
     # - Country Name
@@ -82,8 +87,12 @@ from_year, to_year = st.slider(
     'Which years are you interested in?',
     min_value=min_value,
     max_value=max_value,
+<<<<<<< HEAD
     # value=[min_value, max_value])
     value=[2005, max_value])
+=======
+    value=[min_value, max_value])
+>>>>>>> accad9f36b337ef32d06932e1a87e25fc6b8c422
 
 countries = gdp_df['Country Code'].unique()
 
