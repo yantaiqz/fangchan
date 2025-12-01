@@ -144,7 +144,8 @@ for i, country in enumerate(selected_countries):
 
             pct_change = (last_gdp - first_gdp) / first_gdp
             growth = f'{pct_change:+.2%}'
-
+            delta_color = 'normal'
+            
         st.metric(
             label=f'{country} GDP',
             value=f'{last_gdp:,.0f}',
