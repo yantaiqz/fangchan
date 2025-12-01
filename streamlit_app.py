@@ -55,7 +55,7 @@ def get_gdp_data():
         ['Country Code'],
         [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
         'Year',
-        'GDP',
+        '房价',
     )
     
     # Convert years from string to integers
