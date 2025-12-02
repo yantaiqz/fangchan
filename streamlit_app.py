@@ -117,40 +117,41 @@ st.line_chart(
 
 ''
 ''
-import altair as alt  # 确保你导入了 altair
+import altair as alt
 
-# ... (你之前的过滤代码保持不变) ...
+# ... (前面的代码保持不变: slider, multiselect, data filtering) ...
 
 st.header('房价走势', divider='gray')
 
-# 1. 计算当前过滤后数据的最小值和最大值 (为了设置坐标轴范围)
-# 为了视觉美观，通常会在最低价基础上留一点缓冲空间 (例如减去 5% 或直接用 min)
-y_min = filtered_gdp_df['房价'].min()
-y_max = filtered_gdp_df['房价'].max()
-
-# 2. 使用 Altair 构建图表
-chart = alt.Chart(filtered_gdp_df).mark_line().encode(
-    # X轴设置：format='d' 确保年份显示为 2020 而不是 2,020
-    x=alt.X('时间', axis=alt.Axis(format='d', title='年份')),
-    
-    # Y轴设置：关键在于 scale=alt.Scale(domain=[min, max])
-    # zero=False 表示不强制包含0刻度
+# 1. 定义基础图表 (Base Chart)
+# 这里只定义 X, Y 和 颜色，不定义具体的形状
+base = alt.Chart(filtered_gdp_df).encode(
+    x=alt.X('时间', axis=alt.Axis(format='d', title='年份')), # format='d' 去掉年份中的逗号
     y=alt.Y('房价', 
-            scale=alt.Scale(domain=[y_min, y_max], zero=False), 
+            scale=alt.Scale(zero=False), # zero=False 确保纵坐标不强制从0开始，自动适配数据范围
             axis=alt.Axis(title='平均房价 (元/㎡)')),
-            
-    # 颜色区分城市
-    color='城市',
-    
-    # 鼠标悬停显示具体数值
-    tooltip=['城市', '时间', '房价']
-).interactive() # 允许缩放和平移
+    color='城市'
+)
 
-# 3. 渲染图表
+# 2. 创建折线层 (Line Layer)
+lines = base.mark_line()
+
+# 3. 创建圆点层 (Points Layer) - 关键步骤
+# 这一层负责在每个数据点画一个圆，并绑定 tooltip 鼠标悬停事件
+points = base.mark_circle(size=60).encode(
+    opacity=alt.value(1),  # 设置点的透明度，1为完全不透明
+    tooltip=[
+        alt.Tooltip('城市', title='城市'),
+        alt.Tooltip('时间', title='年份'),
+        alt.Tooltip('房价', title='均价(元)', format=',') # format=',' 添加千位分隔符
+    ]
+)
+
+# 4. 组合并渲染 (Combine and Render)
+# 将折线和圆点叠加 (lines + points)
+chart = (lines + points).interactive() 
+
 st.altair_chart(chart, use_container_width=True)
-
-
-
 
 first_year = gdp_df[gdp_df['时间'] == from_year]
 last_year = gdp_df[gdp_df['时间'] == to_year]
