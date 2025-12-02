@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import math
 from pathlib import Path
+import altair as alt
 
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
@@ -103,23 +104,6 @@ filtered_gdp_df = gdp_df[
     & (gdp_df['时间'] <= to_year)
     & (from_year <= gdp_df['时间'])
 ]
-
-st.header('房价走势', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='时间',
-    y='房价',
-    color='城市',
-)
-
-''
-''
-import altair as alt
-
-# ... (前面的代码保持不变: slider, multiselect, data filtering) ...
 
 st.header('房价走势', divider='gray')
 
