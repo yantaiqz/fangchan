@@ -66,7 +66,7 @@ gdp_df = get_gdp_data()
 
 # Set the title that appears at the top of the page.
 '''
-# 📈 房产趋势透视
+# 📈 房价趋势透视
 过去30年核心城市房产价格趋势数据分析
 '''
 
@@ -117,6 +117,39 @@ st.line_chart(
 
 ''
 ''
+import altair as alt  # 确保你导入了 altair
+
+# ... (你之前的过滤代码保持不变) ...
+
+st.header('房价走势', divider='gray')
+
+# 1. 计算当前过滤后数据的最小值和最大值 (为了设置坐标轴范围)
+# 为了视觉美观，通常会在最低价基础上留一点缓冲空间 (例如减去 5% 或直接用 min)
+y_min = filtered_gdp_df['房价'].min()
+y_max = filtered_gdp_df['房价'].max()
+
+# 2. 使用 Altair 构建图表
+chart = alt.Chart(filtered_gdp_df).mark_line().encode(
+    # X轴设置：format='d' 确保年份显示为 2020 而不是 2,020
+    x=alt.X('时间', axis=alt.Axis(format='d', title='年份')),
+    
+    # Y轴设置：关键在于 scale=alt.Scale(domain=[min, max])
+    # zero=False 表示不强制包含0刻度
+    y=alt.Y('房价', 
+            scale=alt.Scale(domain=[y_min, y_max], zero=False), 
+            axis=alt.Axis(title='平均房价 (元/㎡)')),
+            
+    # 颜色区分城市
+    color='城市',
+    
+    # 鼠标悬停显示具体数值
+    tooltip=['城市', '时间', '房价']
+).interactive() # 允许缩放和平移
+
+# 3. 渲染图表
+st.altair_chart(chart, use_container_width=True)
+
+
 
 
 first_year = gdp_df[gdp_df['时间'] == from_year]
