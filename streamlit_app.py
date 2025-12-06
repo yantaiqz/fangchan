@@ -173,10 +173,10 @@ def render_bottom_nav(nav_data):
         <a href="https://youqian.streamlit.app/" class="nav-item" target="_blank">
             {nav_data['nav_1']}
         </a>
-        <a href="https://fangchan.streamlit.app/" class="nav-item" target="_blank">
+        <a href="https://fangchan.streamlit.app/" class="nav-item active" target="_blank">
             {nav_data['nav_2']}
         </a>
-        <a href="https://fangjia.streamlit.app/" class="nav-item active" target="_blank"> 
+        <a href="https://fangjia.streamlit.app/" class="nav-item" target="_blank"> 
             {nav_data['nav_3']}
         </a>
         <a href="https://chuhai.streamlit.app/" class="nav-item" target="_blank">
