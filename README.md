@@ -1,4 +1,4 @@
-这是一个为您的 **“房价趋势透视” Streamlit 应用** 生成的 SEO 优化的 Readme 文件。
+# [房价趋势透视](https://fangchan.streamlit.app/) 
 
 该 Readme 重点突出应用的核心功能（**核心城市房价可视化**、**时间轴对比**）和使用的关键技术（**Streamlit**、**Pandas**、**Altair**）。
 
