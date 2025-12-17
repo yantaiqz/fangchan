@@ -1,32 +1,45 @@
-import streamlit as st
-import pandas as pd
-import math
-from pathlib import Path
-import altair as alt
-
-# -------------------------- 全局配置 --------------------------
-st.set_page_config(
-    page_title='房价趋势透视',
-    page_icon='📈',
-    layout='wide', 
-    initial_sidebar_state="collapsed"
-)
-
-# -------------------------- 核心样式 (极简版) --------------------------
+# -------------------------- 核心样式 (极致压缩版) --------------------------
 st.markdown("""
 <style>
-    /* 隐藏默认元素 */
-    #MainMenu, footer, header, [data-testid="stSidebar"], .stDeployButton {display: none !important;}
+    /* 1. 彻底隐藏默认干扰元素及占位 */
+    #MainMenu, footer, header, [data-testid="stHeader"], [data-testid="stSidebar"], .stDeployButton {
+        display: none !important;
+        height: 0 !important;
+    }
     
-    /* 全局紧凑化 */
+    /* 2. 核心：压缩内容容器的顶部留白 */
+    .block-container {
+        padding-top: 1rem !important;    /* 默认通常是 6rem，改为 1rem */
+        padding-bottom: 5rem !important; /* 为底部导航留空间 */
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    /* 3. 压缩组件之间的默认间距 */
+    [data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+
+    /* 4. 全局紧凑化 */
     .stApp {
         background: #f8fafc !important;
         font-family: 'Inter', sans-serif !important;
-        padding: 0.5rem 1rem 60px !important;
-        margin: 0 !important;
     }
 
-    /* 底部导航 */
+    /* 5. 标题区域极致紧凑 */
+    h1 {
+        font-size: 1.4rem !important; 
+        margin-top: -0.5rem !important; /* 向上微调 */
+        margin-bottom: 0.2rem !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* 按钮对齐微调 */
+    .stHorizontalBlock {
+        align-items: center !important;
+    }
+
+    /* 底部导航 (保持原样) */
     .bottom-nav {
         position: fixed !important;
         bottom: 0 !important;
@@ -39,7 +52,6 @@ st.markdown("""
         display: flex !important;
         align-items: center !important;
         justify-content: space-around !important;
-        padding: 0 5px !important;
         z-index: 9999 !important;
     }
     
@@ -47,121 +59,17 @@ st.markdown("""
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        width: 100% !important;
-        height: 36px !important;
+        flex: 1 !important;
+        height: 100% !important;
         color: #94a3b8 !important;
         text-decoration: none !important;
         font-size: 0.65rem !important;
         font-weight: 600 !important;
-        border-radius: 6px !important;
-        margin: 0 1px !important;
     }
     
     .nav-item.active {
         color: #2563eb !important;
         background: rgba(59,130,246,0.1) !important;
     }
-
-    /* 控件紧凑化 */
-    h1 {font-size: 1.6rem !important; margin: 0 0 0.5rem !important;}
-    h2 {font-size: 1.2rem !important; margin: 0.8rem 0 0.5rem !important;}
-    .stSlider, .stMultiselect {margin-bottom: 0.8rem !important;}
-    [data-testid="stMetric"] {padding: 0.8rem !important; margin-bottom: 0.5rem !important;}
-    [data-testid="stHorizontalBlock"] {gap: 0.5rem !important;}
-    
-    /* 右上角按钮 */
-    .neal-btn {
-        background: #fff !important;
-        border: 1px solid #e5e7eb !important;
-        color: #111 !important;
-        font-size: 12px !important;
-        padding: 6px 10px !important;
-        border-radius: 6px !important;
-        height: 34px !important;
-        width: 100% !important;
-        cursor: pointer !important;
-        text-decoration: none !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
 </style>
 """, unsafe_allow_html=True)
-
-# -------------------------- 右上角按钮 --------------------------
-col_empty, col_more = st.columns([0.85, 0.15])
-with col_more:
-    st.markdown('<a href="https://haowan.streamlit.app/" target="_blank" class="neal-btn">✨ 更多好玩应用</a>', unsafe_allow_html=True)
-
-# -------------------------- 底部导航 --------------------------
-def render_nav():
-    nav_html = """
-    <div class="bottom-nav">
-        <a href="https://youqian.streamlit.app/" class="nav-item">财富排行</a>
-        <a href="https://fangchan.streamlit.app/" class="nav-item active">世界房产</a>
-        <a href="https://fangjia.streamlit.app/" class="nav-item">城市房价</a>
-        <a href="https://chuhai.streamlit.app/" class="nav-item">全球法律</a>
-        <a href="https://chuhai.streamlit.app/" class="nav-item">全球企业</a>
-        <a href="https://chuhai.streamlit.app/" class="nav-item">合同审查</a>
-        <a href="https://qfschina.streamlit.app/" class="nav-item">德国财税</a>
-        <a href="https://fangjia.streamlit.app/" class="nav-item">深圳房市</a>
-    </div>
-    """
-    st.markdown(nav_html, unsafe_allow_html=True)
-
-# -------------------------- 数据加载 --------------------------
-@st.cache_data
-def load_data():
-    try:
-        df = pd.read_csv(Path(__file__).parent/'data/fangchan_data.csv', delimiter=';')
-        df = df.melt(['Country Code'], [str(x) for x in range(1998, 2026)], '时间', '房价')
-        df['时间'] = pd.to_numeric(df['时间'])
-        return df.rename(columns={'Country Code': '城市'})
-    except:
-        st.error("数据文件缺失: data/fangchan_data.csv")
-        return pd.DataFrame()
-
-df = load_data()
-
-# -------------------------- 页面内容 --------------------------
-# 标题
-st.markdown("# 📈 房价趋势透视\n<span style='font-size:0.9rem;color:#64748b'>过去30年核心城市房产价格趋势分析</span>", unsafe_allow_html=True)
-
-# 时间筛选
-min_year, max_year = (df['时间'].min(), df['时间'].max()) if not df.empty else (2000, 2025)
-from_year, to_year = st.slider('时间区间', min_year, max_year, [2005, max_year])
-
-# 城市选择
-cities = df['城市'].unique() if not df.empty else ['北京', '上海', '深圳', '杭州', '成都', '烟台']
-selected_cities = st.multiselect('城市', cities, ['北京', '上海', '深圳', '杭州', '成都', '烟台'])
-
-# 数据过滤
-if not df.empty:
-    filtered_df = df[(df['城市'].isin(selected_cities)) & (df['时间'] >= from_year) & (df['时间'] <= to_year)]
-    
-    # 房价走势图表
-    st.header('房价走势', divider='gray')
-    if not filtered_df.empty:
-        chart = alt.Chart(filtered_df).encode(
-            x=alt.X('时间:O', title='年份'),
-            y=alt.Y('房价', scale=alt.Scale(zero=False), title='均价(元/㎡)'),
-            color='城市'
-        )
-        chart = (chart.mark_line() + chart.mark_circle(size=40).encode(
-            tooltip=['城市', '时间', alt.Tooltip('房价', format=',')]
-        )).interactive().properties(height=300)
-        st.altair_chart(chart, use_container_width=True)
-        
-        # 同比增长
-        st.header(f'{to_year}年房价同比增长', divider='gray')
-        cols = st.columns(min(6, len(selected_cities)))
-        for i, city in enumerate(selected_cities):
-            with cols[i % len(cols)]:
-                first = df[(df['城市']==city) & (df['时间']==from_year)]['房价'].values
-                last = df[(df['城市']==city) & (df['时间']==to_year)]['房价'].values
-                if len(first) and len(last) and first[0] != 0:
-                    growth = f'{(last[0]-first[0])/first[0]:+.2%}'
-                    st.metric(city, f'{last[0]:,.0f}', growth)
-
-# 底部导航
-render_nav()
